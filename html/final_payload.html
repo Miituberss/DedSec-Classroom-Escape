@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>SYSTEM FAILURE</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            overflow: hidden;
+            padding-top: 50px;
+        }
+
+        /* Animación de temblor para el título */
+        h1 {
+            animation: shake 0.5s infinite;
+            color: red;
+            font-size: 60px;
+            text-shadow: 2px 2px #00ffcc;
+        }
+
+        .ascii-art {
+            font-size: 12px;
+            line-height: 10px;
+            color: #ddd;
+            margin: 30px auto;
+            opacity: 0.8;
+        }
+
+        /* AQUÍ ESTÁ EL TRUCO: Texto negro sobre fondo negro */
+        .hidden-text {
+            color: black;
+            font-size: 24px;
+            margin: 40px auto;
+            width: fit-content;
+            user-select: text;
+            /* Crucial: permite seleccionarlo */
+            cursor: text;
+        }
+
+        /* Pequeña ayuda visual al pasar el mouse para que sepan que hay algo ahí */
+        .hidden-text:hover {
+            cursor: help;
+        }
+
+        input {
+            margin-top: 30px;
+            padding: 15px;
+            font-size: 24px;
+            border: 3px solid white;
+            background: transparent;
+            color: white;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            width: 300px;
+        }
+
+        button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background: #00ffcc;
+            border: none;
+            font-weight: bold;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        @keyframes shake {
+            0% {
+                transform: translate(1px, 1px) rotate(0deg);
+            }
+
+            10% {
+                transform: translate(-1px, -2px) rotate(-1deg);
+            }
+
+            20% {
+                transform: translate(-3px, 0px) rotate(1deg);
+            }
+
+            30% {
+                transform: translate(3px, 2px) rotate(0deg);
+            }
+
+            40% {
+                transform: translate(1px, -1px) rotate(1deg);
+            }
+
+            50% {
+                transform: translate(-1px, 2px) rotate(-1deg);
+            }
+
+            60% {
+                transform: translate(-3px, 1px) rotate(0deg);
+            }
+
+            70% {
+                transform: translate(3px, 1px) rotate(-1deg);
+            }
+
+            80% {
+                transform: translate(-1px, -1px) rotate(1deg);
+            }
+
+            90% {
+                transform: translate(1px, 2px) rotate(0deg);
+            }
+
+            100% {
+                transform: translate(1px, -2px) rotate(-1deg);
+            }
+        }
+
+        /* Estilo para el mensaje de victoria */
+        #win-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            z-index: 999;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>⚠️ CRITICAL ERROR ⚠️</h1>
+
+    <div class="ascii-art">
+        <pre>
+           888     .d88888b.   .d8888b.  888
+           888    d88P" "Y88b d88P  Y88b 888
+ .d8888b.  888    888     888 Y88b.      888
+d88P  Y88b 888888 888     888  "Y888b.   888
+888        888    888     888     "Y88b. 888
+888        888    888     888       "888 Y8P
+Y88b  d88P Y88b.  Y88b. .d88P Y88b  d88P  " 
+ "Y8888P"  "Y888   "Y88888P"   "Y8888P"  888
+        </pre>
+    </div>
+
+    <div>
+        <p>EL SISTEMA ESTÁ VULNERABLE.</p>
+        <p>CONFIRMA EL BORRADO TOTAL DE BLUME.</p>
+        <p>LA CLAVE ESTÁ OCULTA EN LAS SOMBRAS DE ESTA PÁGINA.</p>
+
+        <div class="hidden-text">
+            CLAVE DE CONFIRMACIÓN: [ BYE_BYE_BLUME ]
+        </div>
+    </div>
+
+    <input type="text" id="finalKey" placeholder="ESCRIBE LA CLAVE..." autocomplete="off">
+    <button onclick="endGame()">INICIAR BORRADO</button>
+
+    <div id="win-screen">
+        <h1 style="color: #00ffcc; font-size: 80px; text-shadow: 0 0 20px #00ffcc;">HACKED.</h1>
+        <p style="color: white; font-size: 24px;">BIENVENIDOS A DEDSEC.</p>
+        <p style="color: #666;">(Ya podéis iros de vacaciones)</p>
+    </div>
+
+<script>
+        async function endGame() {
+            var input = document.getElementById("finalKey").value.trim();
+            const validHash = "843893569"; 
+            const inputHash = simpleHash(input);
+
+            if(inputHash === validHash) {
+                var team = localStorage.getItem("dedsec_team_name") || "UNKNOWN";
+
+                try {
+                    let response = await fetch('/game_over', {
+                        method: 'POST',
+                        body: team
+                    });
+                    
+                    let result = await response.text();
+
+                    if (result === "WINNER") {
+                        window.location.href = "winner.html";
+                    } else {
+                        window.location.href = "mission_complete.html";
+                    }
+
+                } catch(e) {
+                    alert("Error de conexión con el nodo maestro.");
+                }
+            } else {
+                alert("⛔ CLAVE INCORRECTA.");
+            }
+        }
+
+        function simpleHash(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash; 
+            }
+            return hash.toString();
+        }
+    </script>
+</body>
+
+</html>

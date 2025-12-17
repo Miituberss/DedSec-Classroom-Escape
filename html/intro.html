@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>DedSec | Command Node</title>
+    <style>
+        body {
+            background: url('dedsec2.webp') no-repeat center center fixed; 
+            background-size: cover;
+            background-color: #000;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            font-family: 'Courier New', monospace;
+            color: #fff;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1;
+        }
+
+        #center-content, #video-container, #terminal-screen {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+        }
+
+        /* Botón inicial */
+        .dedsec-logo-btn {
+            cursor: pointer;
+            color: #fff;
+            border: 3px solid #fff;
+            padding: 20px 40px;
+            font-size: 24px;
+            font-weight: bold;
+            background: rgba(0,0,0,0.8);
+            letter-spacing: 4px;
+            transition: 0.3s;
+        }
+        .dedsec-logo-btn:hover {
+            box-shadow: 0 0 20px #00ffcc;
+            color: #00ffcc;
+            border-color: #00ffcc;
+        }
+
+        /* Video */
+        #video-container {
+            display: none;
+            width: 80vw;
+            max-width: 900px;
+            border: 2px solid #00ffcc;
+            box-shadow: 0 0 30px rgba(0, 255, 204, 0.4);
+            background: black;
+        }
+
+        /* PANTALLA FINAL INPUT */
+        #terminal-screen {
+            display: none;
+            width: 80%;
+            max-width: 900px;
+        }
+
+        h2 { 
+            color: #ff3333; 
+            font-size: 30px; 
+            text-transform: uppercase; 
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px red;
+        }
+
+        .input-line {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            background: rgba(0,0,0,0.6);
+            padding: 20px;
+            border: 1px dashed #555;
+        }
+
+        .prefix { color: #00ffcc; margin-right: 15px; }
+
+        /* El input invisible que parece texto */
+        #ipInput {
+            background: transparent;
+            border: none;
+            color: white;
+            font-family: 'Courier New', monospace;
+            font-size: 40px;
+            font-weight: bold;
+            width: 400px;
+            outline: none;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        /* Clase para cuando confirmas la IP */
+        .confirmed {
+            color: #00ffcc !important;
+            animation: pulse 1s infinite alternate;
+            border-bottom: 3px solid #00ffcc;
+        }
+
+        @keyframes pulse {
+            from { text-shadow: 0 0 10px #00ffcc; }
+            to { text-shadow: 0 0 20px #00ffcc, 0 0 30px #00ffcc; }
+        }
+        
+        .hint { margin-top: 20px; font-size: 14px; color: #666; }
+    </style>
+</head>
+<body>
+
+    <div class="overlay"></div>
+
+    <div id="center-content">
+        <div class="dedsec-logo-btn" onclick="startSequence()">
+            >> INICIAR SESIÓN <<
+        </div>
+    </div>
+
+    <div id="video-container">
+        <video id="myVideo" width="100%" onended="showTerminal()">
+            <source src="DedSecIni.mp4" type="video/mp4">
+        </video>
+    </div>
+
+    <div id="terminal-screen">
+        <h2>⚠️ ENLACE NO DEFINIDO ⚠️</h2>
+        <p style="color: #ccc;">INTRODUCE COORDENADAS DEL NODO MAESTRO:</p>
+        
+        <div class="input-line">
+            <span class="prefix">root@dedsec:~#</span>
+            <input type="text" id="ipInput" placeholder="192.168.X.X" autocomplete="off">
+        </div>
+
+        <div class="hint" id="statusMsg">[ ESPERANDO ENTRADA MANUAL... ]</div>
+
+        <div id="launch-btn" style="display:none; margin-top: 40px;">
+            <button class="dedsec-logo-btn" onclick="goToDashboard()">
+                >> INICIAR MONITORIZACIÓN <<
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function startSequence() {
+            document.getElementById("center-content").style.display = "none";
+            var vidContainer = document.getElementById("video-container");
+            vidContainer.style.display = "block";
+            var vid = document.getElementById("myVideo");
+            vid.play();
+        }
+
+        function showTerminal() {
+            document.getElementById("video-container").style.display = "none";
+            document.getElementById("terminal-screen").style.display = "block";
+            document.getElementById("ipInput").focus();
+        }
+
+        document.getElementById("ipInput").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                lockIP();
+            }
+        });
+
+        function lockIP() {
+            var input = document.getElementById("ipInput");
+            var status = document.getElementById("statusMsg");
+            var title = document.querySelector("h2");
+
+            if(input.value.length > 5) { 
+                input.classList.add("confirmed");
+                input.disabled = true; 
+                
+                title.innerHTML = ">> NODO ACTIVO <<";
+                title.style.color = "#00ffcc";
+                title.style.textShadow = "0 0 20px #00ffcc";
+                
+                status.innerHTML = "TRANSMITIENDO A TODOS LOS DISPOSITIVOS...";
+                status.style.color = "#00ffcc";
+
+                document.getElementById("launch-btn").style.display = "block";
+            }
+        }
+
+        function goToDashboard() {
+            window.location.href = "final.html";
+        }
+    </script>
+
+</body>
+</html>

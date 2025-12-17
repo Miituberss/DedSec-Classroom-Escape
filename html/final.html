@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>DedSec | Command Center</title>
+    <style>
+        body {
+            background: url('dedsec2.webp') no-repeat center center fixed;
+            background-size: cover;
+            background-color: #000;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            font-family: 'Courier New', monospace;
+            color: white;
+            text-align: center;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            /* Fondo muy oscuro */
+            z-index: 1;
+        }
+
+        /* Capas de contenido */
+        #center-content,
+        #video-container,
+        #xmas-screen {
+            position: relative;
+            z-index: 10;
+            width: 90%;
+            max-width: 1000px;
+        }
+
+        /* --- FASE 1 & 2 (Estilos anteriores) --- */
+        #waiting-screen {
+            animation: pulseGray 2s infinite;
+        }
+
+        h1 {
+            font-size: 40px;
+            color: #aaa;
+            text-transform: uppercase;
+        }
+
+        .loader {
+            font-size: 20px;
+            color: #00ffcc;
+            margin-top: 10px;
+        }
+
+        #winner-screen {
+            display: none;
+        }
+
+        .winner-title {
+            color: #00ffcc;
+            font-size: 30px;
+            letter-spacing: 5px;
+        }
+
+        .winner-name {
+            font-size: 80px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 0 30px #ff3333;
+            margin: 30px 0;
+            animation: glitch 1s infinite alternate;
+        }
+
+        /* Botón DedSec */
+        .dedsec-logo-btn {
+            cursor: pointer;
+            color: #fff;
+            border: 3px solid #fff;
+            padding: 20px 40px;
+            font-size: 24px;
+            font-weight: bold;
+            background: rgba(0, 0, 0, 0.8);
+            text-transform: uppercase;
+            transition: 0.3s;
+        }
+
+        .dedsec-logo-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px #00ffcc;
+            color: #00ffcc;
+            border-color: #00ffcc;
+        }
+
+        /* --- VIDEO --- */
+        #video-container {
+            display: none;
+            border: 2px solid #00ffcc;
+            box-shadow: 0 0 30px rgba(0, 255, 204, 0.4);
+            background: black;
+        }
+
+        /* --- FASE 4: PANTALLA NAVIDAD --- */
+        #xmas-screen {
+            display: none;
+        }
+
+        .ascii-art {
+            font-size: 14px;
+            line-height: 15px;
+            color: #00ffcc;
+            margin-bottom: 30px;
+            white-space: pre;
+            text-shadow: 0 0 5px #00ffcc;
+        }
+
+        .xmas-title {
+            font-size: 60px;
+            color: #ff3333;
+            font-weight: bold;
+            text-shadow: 2px 2px 0 white;
+            margin-bottom: 20px;
+        }
+
+        .xmas-sub {
+            font-size: 24px;
+            color: white;
+        }
+
+        @keyframes pulseGray {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        @keyframes glitch {
+            0% {
+                transform: skewX(0deg);
+            }
+
+            20% {
+                transform: skewX(-2deg);
+            }
+
+            40% {
+                transform: skewX(2deg);
+            }
+
+            60% {
+                transform: skewX(0deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="overlay"></div>
+
+    <div id="center-content">
+        <div id="waiting-screen">
+            <h1>ESPERANDO CONEXIÓN DEL NÚCLEO...</h1>
+            <div class="loader">[ ESCANEANDO RED LOCAL ]</div>
+        </div>
+
+        <div id="winner-screen">
+            <div class="winner-title">>> HACKEO COMPLETADO POR:</div>
+            <div id="winner-display" class="winner-name">???</div>
+            <div class="dedsec-logo-btn" onclick="loadVideo()">
+                >> INICIAR TRANSMISIÓN FINAL << </div>
+            </div>
+        </div>
+
+        <div id="video-container"></div>
+
+        <div id="xmas-screen">
+            <div class="ascii-art">
+                <pre>
+      *             ,                        
+                  _/^\_                      
+                 <     >                     
+*                 /.-.\         *            
+         *        `/&\`                   *  
+                 ,@.*;@,                     
+                /_o.I %_\    *               
+   *           (`'--:o(_@;                   
+              /`;--.,__ `')             *    
+             ;@`o % O,*`'`&\                 
+       *    (`'--)_@ ;o %'()\      *         
+            /`;--._`''--._O'@;               
+           /&*,()~o`;-.,_ `""`)              
+*          /`,@ ;+& () o*`;-';\              
+          (`""--.,_0 +% @' &()\              
+          /-.,_    ``''--....-'`)  *         
+     *    /@%;o`:;'--,.__   __.'\            
+         ;*,&(); @ % &^;~`"`o;@();         * 
+         /(); o^~; & ().o@*&`;&%O\           
+   jgs   `"="==""==,,,.,="=="==="`           
+      __.----.(\-''#####---...___...-----._  
+    '`         \)_`"""""`                    
+            .--' ')                          
+          o(  )_-\                           
+            `"""` `                          
+                </pre>
+            </div>
+
+            <div class="xmas-title">¡ENHORABUENA HACKERS!</div>
+            <div class="xmas-sub">
+                <p>>> CURSO DE ROBÓTICA SUPERADO <<</p>
+                        <p style="color: #00ffcc; margin-top: 30px;">[ SYSTEM_MSG: FELIZ NAVIDAD A TODOS ]</p>
+            </div>
+        </div>
+
+        <script>
+            // 1. SONDEO AL SERVIDOR
+            var checkInterval = setInterval(checkStatus, 2000);
+            var victoryShown = false;
+
+            async function checkStatus() {
+                if (victoryShown) return;
+
+                try {
+                    let response = await fetch('/check_winner_status');
+                    let data = await response.json();
+
+                    if (data.winner) {
+                        showWinnerUI(data.winner);
+                    }
+                } catch (error) {
+                    console.log("Esperando servidor...");
+                }
+            }
+
+            function showWinnerUI(name) {
+                victoryShown = true;
+                clearInterval(checkInterval);
+                document.getElementById("waiting-screen").style.display = "none";
+                document.getElementById("winner-screen").style.display = "block";
+                document.getElementById("winner-display").innerText = name;
+            }
+
+            function loadVideo() {
+                var centerContent = document.getElementById("center-content");
+                var container = document.getElementById("video-container");
+
+                centerContent.style.display = "none";
+                container.style.display = "block";
+
+                // AÑADIDO: onended="showXmas()"
+                container.innerHTML = `
+                <video width="100%" height="100%" controls autoplay onended="showXmas()">
+                    <source src="DedSecFin.mp4" type="video/mp4">
+                    Tu navegador no soporta video HTML5.
+                </video>
+            `;
+            }
+
+            // FUNCIÓN QUE SALTA AL TERMINAR EL VÍDEO
+            function showXmas() {
+                document.getElementById("video-container").style.display = "none";
+                document.getElementById("xmas-screen").style.display = "block";
+            }
+        </script>
+
+</body>
+
+</html>

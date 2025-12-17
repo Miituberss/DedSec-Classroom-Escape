@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>DedSec | Database Access</title>
+    <style>
+        body { 
+            background-color: #0d0d0d; 
+            color: #00ffcc; 
+            font-family: 'Courier New', monospace; 
+            padding: 40px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 90vh;
+        }
+        .terminal { 
+            border: 1px solid #00ffcc; 
+            padding: 40px; 
+            max-width: 800px; 
+            width: 100%;
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.2); 
+            background: rgba(0, 20, 0, 0.9);
+        }
+        h1 { text-align: center; text-transform: uppercase; letter-spacing: 5px; margin-bottom: 40px; }
+        
+        .encrypted-box { 
+            color: #ff0055; 
+            font-size: 20px; 
+            text-align: center; 
+            margin: 30px 0; 
+            border: 1px dashed #ff0055; 
+            padding: 20px;
+            background: rgba(50, 0, 0, 0.3);
+        }
+        
+        .label { color: #888; font-size: 14px; margin-bottom: 5px; display: block; }
+        
+        input { 
+            background: black; 
+            border: 1px solid #00ffcc; 
+            color: #00ffcc; 
+            padding: 15px; 
+            width: 100%; 
+            box-sizing: border-box;
+            font-family: inherit; 
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        input:focus { outline: none; border-color: white; }
+
+        button { 
+            background: #00ffcc; 
+            color: black; 
+            border: none; 
+            padding: 15px 40px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            font-size: 16px;
+            display: block;
+            margin: 0 auto;
+        }
+        button:hover { background: white; }
+
+        .hint { font-size: 12px; color: #444; text-align: center; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="terminal">
+        <h1>>> SERVIDOR BLUME: NIVEL 4 <<</h1>
+        <p>> CONEXIÓN ESTABLECIDA.</p>
+        <p>> ERROR: El nombre del protocolo de apagado está cifrado.</p>
+        
+        <p style="margin-top: 30px;"><strong>MISIÓN:</strong> Decodifica la siguiente cadena (Base64) para encontrar el nombre del archivo ejecutable.</p>
+        
+        <div class="encrypted-box">c2h1dGRvd25fcHJvdG9jb2w=</div>
+        
+        <label class="label">INSERTAR COMANDO DESENCRIPTADO:</label>
+        <input type="text" id="answer" placeholder="Ej: archivo_secreto" autocomplete="off">
+        
+        <button onclick="checkAnswer()">EJECUTAR PROTOCOLO</button>
+        
+        <div class="hint">
+            * Pista: Los datos viajan codificados en Base64. Usa un decodificador online.
+        </div>
+    </div>
+
+    <script>
+        async function checkAnswer() {
+            var ans = document.getElementById("answer").value.toLowerCase().trim();
+
+            const validHash = "-1025869215";
+
+            const inputHash = simpleHash(ans);
+
+            if(inputHash === validHash) {
+                document.querySelector('.terminal').style.borderColor = "#00ff00";
+                alert(">> PROTOCOLO ACEPTADO. INICIANDO FASE FINAL...");
+                window.location.href = "final_payload.html";
+            } else {
+                alert(">> ERROR DE SINTAXIS <<\nEl comando no es correcto.");
+                document.getElementById("answer").value = "";
+                document.getElementById("answer").focus();
+            }
+        }
+        function simpleHash(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash; 
+            }
+            return hash.toString();
+        }
+    </script>
+</body>
+</html>

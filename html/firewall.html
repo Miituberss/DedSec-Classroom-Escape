@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>⚠️ ALERTA DE SEGURIDAD ⚠️</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #ff3333;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            border: 4px solid #ff3333;
+            width: 80%;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 40px;
+            box-shadow: 0 0 50px #ff0000;
+            background: rgba(50, 0, 0, 0.8);
+        }
+        h1 { 
+            font-size: 40px; 
+            text-transform: uppercase; 
+            animation: blink 0.8s infinite; 
+            margin-bottom: 10px;
+        }
+        .icon { font-size: 80px; margin-bottom: 20px; }
+        p { font-size: 18px; line-height: 1.5; }
+        
+        input {
+            background: #220000;
+            border: 2px solid #ff3333;
+            color: #ff3333;
+            padding: 15px;
+            font-size: 20px;
+            width: 70%;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            margin-top: 20px;
+            outline: none;
+        }
+        input:focus { box-shadow: 0 0 10px #ff3333; }
+        
+        button {
+            background: #ff3333;
+            color: black;
+            border: none;
+            padding: 15px 30px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            text-transform: uppercase;
+        }
+        button:hover { background: #fff; box-shadow: 0 0 15px white; }
+        
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="icon">🔒</div>
+        <h1>¡Acceso Bloqueado!</h1>
+        <p>FIREWALL FÍSICO DETECTADO</p>
+        <hr style="border-color: #ff3333; width: 50%;">
+        
+        <div style="text-align: left; margin: 20px auto; color: #ffcccc; font-size: 14px;">
+            <strong>>> PROTOCOLO DE ANULACIÓN:</strong>
+            <br><br>
+            1. Localiza el nodo físico (Arduino).<br>
+            2. Conéctalo y monitoriza el Puerto Serie (9600).<br>
+            3. Introduce el Token OTP generado.
+        </div>
+
+        <input type="text" id="tokenInput" placeholder="INTRODUCE EL TOKEN" autocomplete="off">
+        <br>
+        <button onclick="checkToken()">DESBLOQUEAR NÚCLEO</button>
+    </div>
+
+    <script>
+        async function checkToken() {
+            var input = document.getElementById("tokenInput").value.trim();
+            
+            const targetHash = "-417985865";
+
+            const inputHash = simpleHash(input);
+
+            if(inputHash === targetHash) {
+                alert("✅ ACCESO AUTORIZADO. Cargando base de datos...");
+                window.location.href = "database.html";
+            } else {
+                alert("❌ ERROR: Token inválido. La seguridad de Blume ha sido alertada.");
+                document.body.style.backgroundColor = "#ff0000";
+                setTimeout(() => { document.body.style.backgroundColor = "#000"; }, 100);
+            }
+        }
+        function simpleHash(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash; 
+            }
+            return hash.toString();
+        }
+    </script>
+
+</body>
+</html>
