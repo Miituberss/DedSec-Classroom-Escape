@@ -57,12 +57,19 @@ El juego consta de una serie de fases secuenciales:
 * **Hardware:** 1 Placa Arduino (Uno/Nano) + Cable USB.
 
 ### Pasos para el Profesor (Game Master)
-
 1.  **Clonar el repositorio:**
     ```bash
     git clone [https://github.com/Miituberss/DedSec-Classroom-Escape.git](https://github.com/Miituberss/DedSec-Classroom-Escape.git)
     cd DedSec-Classroom-Escape
     ```
+   > [!WARNING]
+   > Debido al tamaño de los archivos multimedia de alta calidad, los videos no están incluidos directamente en el código fuente (Source code.zip).  
+   > Para que el juego funcione correctamente:  
+   > Descarga el código fuente (Source code).  
+   > Descarga los archivos de video adjuntos en esta Release:  
+   > 📥 DedSecIni.mp4  
+   > 📥 DedSecFin.mp4  
+   > Mueve ambos videos a la carpeta raíz del proyecto (donde están los archivos .html).  
 
 2.  **Preparar el Arduino:**
     * Abre `arduino_code/Firewall.ino`.
