@@ -2,79 +2,93 @@ import http.server
 import socketserver
 import json
 import os
+import threading
 
 PORT = 80
 WINNER_NAME = None
+# Creamos un 'candado' para que dos hilos no escriban el ganador a la vez (Race Condition)
+winner_lock = threading.Lock()
+
+# --- CLASE PARA GESTIONAR HILOS (ESTA ES LA MAGIA) ---
+class ThreadingSimpleServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
+    pass
 
 class DedSecHandler(http.server.SimpleHTTPRequestHandler):
     
-    # --- GESTIONAR PETICIONES GET (Cargar webs o preguntar estado) ---
+    # --- GET: Para servir webs y que el profe consulte estado ---
     def do_GET(self):
         global WINNER_NAME
         
-        # 1. ¿Es la petición especial del panel del profesor?
+        # Panel del profesor preguntando estado
         if self.path == '/check_winner_status':
             self.send_response(200)
             self.send_header('Content-type', 'application/json')
-            self.send_header('Access-Control-Allow-Origin', '*') # Evita bloqueos CORS
+            self.send_header('Access-Control-Allow-Origin', '*') 
             self.end_headers()
             response = {"winner": WINNER_NAME}
-            self.wfile.write(json.dumps(response).encode('utf-8'))
-            return # Cortamos aquí para no intentar buscar un archivo con este nombre
+            try:
+                self.wfile.write(json.dumps(response).encode('utf-8'))
+            except BrokenPipeError:
+                pass # Si el navegador cierra rápido, ignoramos el error
+            return
 
-        # 2. Ignorar el icono del navegador (para ensuciar menos la consola)
         if self.path == '/favicon.ico':
             self.send_response(204)
             return
 
-        # 3. Si no es nada de lo anterior, es un ARCHIVO (.html, .css, .js)
-        # Imprimimos qué está pidiendo el alumno
-        print(f"📥 Petición recibida: {self.path}")
+        # Logs en consola (Opcional: puedes comentarlo si hay mucho spam)
+        # print(f"📥 [{self.client_address[0]}] Pide: {self.path}")
         
-        # Verificamos si el archivo existe antes de servirlo
-        # (Quitamos la barra inicial '/' para buscar en la carpeta local)
-        file_path = self.path.lstrip('/')
+        # Corrección de ruta raíz
         if self.path == '/':
-            file_path = 'index.html' # Si piden la raíz, buscamos index.html
+            self.path = '/index.html'
             
-        # Intentamos servirlo con el método estándar
         try:
             super().do_GET()
-        except Exception as e:
-            print(f"❌ ERROR CRÍTICO sirviendo {self.path}: {e}")
+        except (ConnectionResetError, BrokenPipeError):
+            pass # Ignoramos errores de desconexión habituales
 
-    # --- GESTIONAR PETICIONES POST (Cuando un alumno gana) ---
+    # --- POST: Cuando un alumno gana ---
     def do_POST(self):
         global WINNER_NAME
         
         if self.path == '/game_over':
-            content_length = int(self.headers['Content-Length'])
-            post_data = self.rfile.read(content_length)
-            team_name = post_data.decode('utf-8')
-            
-            response_msg = ""
-            
-            if WINNER_NAME is None:
-                WINNER_NAME = team_name
-                print(f"\n🚨🚨🚨 ¡GANADOR CONFIRMADO! Equipo: {team_name} 🚨🚨🚨\n")
-                response_msg = "WINNER"
-            else:
-                print(f"⚠️ Llegada tardía: {team_name}")
-                response_msg = "LATE"
+            try:
+                content_length = int(self.headers['Content-Length'])
+                post_data = self.rfile.read(content_length)
+                team_name = post_data.decode('utf-8')
+                
+                response_msg = ""
+                
+                # Usamos el candado para asegurar que solo UNO sea el primero
+                with winner_lock:
+                    if WINNER_NAME is None:
+                        WINNER_NAME = team_name
+                        print(f"\n🚨🚨🚨 ¡GANADOR CONFIRMADO! Equipo: {team_name} 🚨🚨🚨\n")
+                        response_msg = "WINNER"
+                    else:
+                        print(f"⚠️ Llegada tardía: {team_name}")
+                        response_msg = "LATE"
 
-            self.send_response(200)
-            self.send_header('Access-Control-Allow-Origin', '*')
-            self.end_headers()
-            self.wfile.write(response_msg.encode('utf-8'))
+                self.send_response(200)
+                self.send_header('Access-Control-Allow-Origin', '*')
+                self.end_headers()
+                self.wfile.write(response_msg.encode('utf-8'))
+            except Exception as e:
+                print(f"Error en POST: {e}")
         else:
             super().do_POST()
 
-print(f"💀 SERVIDOR DEDSEC INICIADO EN: http://localhost:{PORT}")
+print(f"💀 SERVIDOR DEDSEC (MULTIHILO) ACTIVO EN: http://localhost:{PORT}")
 print(f"📂 Sirviendo archivos desde: {os.getcwd()}")
 print("---------------------------------------------------------")
 
-# Configuración para permitir reutilizar el puerto si reinicias rápido
+# Configuración para reutilizar puerto rápido
 socketserver.TCPServer.allow_reuse_address = True
 
-with socketserver.TCPServer(("", PORT), DedSecHandler) as httpd:
-    httpd.serve_forever()
+# AQUI ESTÁ EL CAMBIO: Usamos ThreadingSimpleServer en vez de TCPServer
+with ThreadingSimpleServer(("", PORT), DedSecHandler) as httpd:
+    try:
+        httpd.serve_forever()
+    except KeyboardInterrupt:
+        print("\n🛑 Servidor detenido manualmente.")
