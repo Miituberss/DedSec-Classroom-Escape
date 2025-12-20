@@ -116,9 +116,9 @@ Para evitar que los alumnos "listillos" simplemente miren el código fuente (`Ct
 
 ## 📸 Capturas
 
-<img width="1917" height="924" alt="image" src="https://github.com/user-attachments/assets/f83389d9-b8ec-4f6b-8376-c5c56bdd4d83" />
+<center><img width="1917" height="924" alt="image" src="https://github.com/user-attachments/assets/f83389d9-b8ec-4f6b-8376-c5c56bdd4d83" /></center>
 
-<img width="770" height="675" alt="image" src="https://github.com/user-attachments/assets/7fbc5fc8-2652-4d8e-b679-d2a525ef1e5e" />
+<center><img width="770" height="675" alt="image" src="https://github.com/user-attachments/assets/7fbc5fc8-2652-4d8e-b679-d2a525ef1e5e" /></center>
 
 
 ## 🤝 Contribuciones
