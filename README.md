@@ -33,7 +33,7 @@ El juego consta de una serie de fases secuenciales:
     * Script en Bash (`hack_ip.sh`) simula un hackeo en vivo para revelar la IP del servidor local.
 2.  **Fase 1: Acceso al Portal (`index.html`)** 🔐
     * Login corporativo.
-    * *Solución:* Encontrar la contraseña física escondida en el aula (OSINT físico).
+    * *Solución:* Encontrar la contraseña escrita en texto plano en el código usando inspeccionar.
 3.  **Fase 2: Escalada de Privilegios (`dashboard.html`)** 🛡️
     * Panel de control bloqueado para "Becarios".
     * *Solución:* Modificar la URL de `?role=intern` a `?role=admin`.
@@ -116,7 +116,10 @@ Para evitar que los alumnos "listillos" simplemente miren el código fuente (`Ct
 
 ## 📸 Capturas
 
-*(Aquí puedes subir tus propias capturas de pantalla de la interfaz)*
+<img width="1917" height="924" alt="image" src="https://github.com/user-attachments/assets/f83389d9-b8ec-4f6b-8376-c5c56bdd4d83" />
+
+<img width="770" height="675" alt="image" src="https://github.com/user-attachments/assets/7fbc5fc8-2652-4d8e-b679-d2a525ef1e5e" />
+
 
 ## 🤝 Contribuciones
 
